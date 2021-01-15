@@ -2,7 +2,7 @@
 
 require_once __DIR__ . "/Contracts/Input.php";
 
-class Input implements Input
+class Input implements InputImp
 {
 	public static function readLine()
 	{
