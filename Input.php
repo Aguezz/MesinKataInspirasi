@@ -1,9 +1,11 @@
 <?php
 
-class Input
+require_once __DIR__ . "/Contracts/Input.php";
+
+class Input implements Input
 {
-  public static function read()
-  {
-    return trim(fgets(STDIN));
-  }
+	public static function readLine()
+	{
+		return trim(fgets(STDIN));
+	}
 }

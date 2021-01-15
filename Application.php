@@ -1,54 +1,62 @@
 <?php
 
-require_once "Contracts/Application.php";
-require_once "Calculation.php";
+require_once __DIR__ . "/Contracts/Application.php";
+require_once __DIR__ . "/Calculations/Calculation.php";
+require_once __DIR__ . "/Validations/Validation.php";
 
 class Application implements ApplicationImp
 {
-  private $text;
+	private $text;
+	private $validations = [];
+	private $calculations = [];
 
-  private $costLengthOfText = 0;
+	public function __construct($text)
+	{
+		$this->text = $text;
+	}
 
-  private $calculations = [];
+	public function addCalculation($calculation)
+	{
+		$this->calculations[] = new $calculation($this->text);
+	}
 
-  public function __construct($text)
-  {
-    $this->text = $text;
-  }
+	public function addValidation($validation)
+	{
+		$this->validations[] = new $validation($this->text);
+	}
 
-  public function register(Calculation $calculation)
-  {
-    $this->calculations[] = $calculation;
-  }
+	public function getCalculations()
+	{
+		return $this->calculations;
+	}
 
-  public function calculate()
-  {
-    $this->calculateLengthOfTextCost();
+	public function validate()
+	{
+		foreach ($this->validations as $validation) {
+			$validation->validate();
+		}
+	}
 
-    foreach ($this->calculations as $calculation) {
-      $calculation->calculate($this->text);
-    }
-  }
-  
-  private function calculateLengthOfTextCost()
-  {
-    $length = strlen($this->text);
-    $this->costLengthOfText = 0.1 * $length;
-  }
+	public function calculate()
+	{
+		foreach ($this->calculations as $calculation) {
+			$calculation->calculate();
+		}
+	}
 
-  public function getCostTotal()
-  {
-    $cost = $this->costLengthOfText;
+	public function getFinalCost()
+	{
+		$finalCost = 0;
 
-    foreach ($this->calculations as $calculation) {
-      $cost += $calculation->getCost();
-    }
+		foreach ($this->calculations as $calculation) {
+			$finalCost += $calculation->getCost();
+		}
 
-    return $cost;
-  }
+		return $finalCost;
+	}
 
-  public function getText()
-  {
-    return $this->text;
-  }
+	public function getText()
+	{
+		return $this->text;
+	}
 }
