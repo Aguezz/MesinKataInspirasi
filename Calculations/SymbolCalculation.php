@@ -12,7 +12,7 @@ class SymbolCalculation extends Calculation
         $pattern = "/\#|\,|\!/";
         $this->totalChars = preg_match_all($pattern, $this->text);
 
-        return $this->totalChars * SymbolCalculation::COST_PER_CHAR;
+        $this->cost = $this->totalChars * SymbolCalculation::COST_PER_CHAR;
     }
 
     public function getName()
